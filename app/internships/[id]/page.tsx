@@ -1,7 +1,6 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ExternalApplyToggle from '@/components/ExternalApplyToggle';
 import type { Internship } from '@/lib/types';
@@ -79,10 +78,6 @@ export default async function InternshipDetailPage({ params }: PageProps) {
   const { id } = await params;
   const [internship, user] = await Promise.all([fetchInternship(id), getAuthUser()]);
 
-  if (!user) {
-    redirect(`/login?redirect=/internships/${id}`);
-  }
-
   const existingApplication =
     user && internship
       ? await getExistingApplication(id, user.id)
@@ -104,8 +99,6 @@ export default async function InternshipDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
-
       <main className="flex-1">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           {/* Back link */}

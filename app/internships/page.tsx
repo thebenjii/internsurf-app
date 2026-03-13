@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import Footer from '@/components/Footer';
 import InternshipsClient from './InternshipsClient';
@@ -37,10 +36,6 @@ async function fetchInternships(): Promise<Internship[]> {
 }
 
 export default async function InternshipsPage({ searchParams }: PageProps) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/login?redirect=/internships');
-
   const [internships, params] = await Promise.all([
     fetchInternships(),
     searchParams,
