@@ -42,7 +42,7 @@ export type Internship = {
   is_remote: boolean;
   deadline: string | null;
   is_active: boolean;
-  source: 'internal' | 'adzuna' | 'remotive' | 'themuse';
+  source: 'internal' | 'adzuna' | 'remotive' | 'themuse' | 'arbeitnow' | 'jobicy';
   external_url: string | null;
   external_id: string | null;
   created_at: string;

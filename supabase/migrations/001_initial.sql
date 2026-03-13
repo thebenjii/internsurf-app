@@ -36,7 +36,7 @@ CREATE TABLE internships (
   is_remote       BOOLEAN DEFAULT FALSE,
   deadline        DATE,
   is_active       BOOLEAN DEFAULT TRUE,
-  source          TEXT DEFAULT 'internal' CHECK (source IN ('internal', 'adzuna', 'remotive', 'themuse')),
+  source          TEXT DEFAULT 'internal' CHECK (source IN ('internal', 'adzuna', 'remotive', 'themuse', 'arbeitnow', 'jobicy')),
   external_url    TEXT,
   external_id     TEXT,
   created_at      TIMESTAMPTZ DEFAULT NOW(),

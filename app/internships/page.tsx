@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import InternshipsClient from './InternshipsClient';
 import type { Internship } from '@/lib/types';
@@ -52,8 +51,6 @@ export default async function InternshipsPage({ searchParams }: PageProps) {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      <Navbar />
-
       <main className="flex-1">
         {/* Page header */}
         <div className="bg-white border-b border-gray-200">

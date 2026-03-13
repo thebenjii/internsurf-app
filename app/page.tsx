@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 // Feature cards data
@@ -50,9 +49,7 @@ const ORG_STEPS = [
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <Navbar />
-
+    <div className="flex flex-col bg-white">
       <main className="flex-1">
         {/* Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white">
