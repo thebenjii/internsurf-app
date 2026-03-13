@@ -1,38 +1,34 @@
 import { Suspense } from 'react';
-import { createClient } from '@/lib/supabase/server';
 import Footer from '@/components/Footer';
 import InternshipsClient from './InternshipsClient';
 import type { Internship } from '@/lib/types';
+
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? 'https://hwwkbrifairouslfeplt.supabase.co';
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh3d2ticmlmYWlyb3VzbGZlcGx0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNzIxOTYsImV4cCI6MjA4ODk0ODE5Nn0.Du_4d85Y5qMxvR7rCe7WkE7SbIU3Ciprc3m-YuYQ9ic';
 
 interface PageProps {
   searchParams: Promise<{ search?: string; category?: string }>;
 }
 
 async function fetchInternships(): Promise<Internship[]> {
-  const supabase = await createClient();
-
-  const { data, error } = await supabase
-    .from('internships')
-    .select(`
-      *,
-      organization:organizations (
-        id,
-        user_id,
-        name,
-        description,
-        website,
-        created_at
-      )
-    `)
-    .eq('is_active', true)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Failed to fetch internships:', error.message);
+  try {
+    const url = `${SUPABASE_URL}/rest/v1/internships?select=*,organization:organizations(id,user_id,name,description,website,created_at)&is_active=eq.true&order=created_at.desc`;
+    const res = await fetch(url, {
+      headers: {
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      console.error('fetchInternships failed:', res.status, await res.text());
+      return [];
+    }
+    return res.json();
+  } catch (err) {
+    console.error('fetchInternships error:', err);
     return [];
   }
-
-  return (data ?? []) as Internship[];
 }
 
 export default async function InternshipsPage({ searchParams }: PageProps) {
