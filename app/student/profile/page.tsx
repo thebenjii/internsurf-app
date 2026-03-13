@@ -22,7 +22,7 @@ export default async function StudentProfilePage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <h1 className="text-2xl font-bold text-gray-900 mb-2">My Profile</h1>
-      <p className="text-gray-500 text-sm mb-8">Manage your personal information</p>
+      <p className="text-gray-500 text-sm mb-8">Manage your personal information and academic details</p>
 
       <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-6">
         <div>
@@ -36,7 +36,16 @@ export default async function StudentProfilePage() {
         <div className="border-t border-gray-100 pt-6">
           <ProfileForm
             userId={user.id}
-            initialFullName={profile?.full_name ?? ''}
+            initial={{
+              full_name: profile?.full_name ?? '',
+              school: profile?.school ?? '',
+              major: profile?.major ?? '',
+              graduation_year: profile?.graduation_year ?? null,
+              gpa: profile?.gpa ?? null,
+              bio: profile?.bio ?? '',
+              linkedin_url: profile?.linkedin_url ?? '',
+              phone: profile?.phone ?? '',
+            }}
           />
         </div>
       </div>

@@ -1,8 +1,9 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import ExternalApplyToggle from '@/components/ExternalApplyToggle';
 import type { Internship } from '@/lib/types';
 
 interface PageProps {
@@ -63,9 +64,29 @@ async function getAuthUser() {
   return user;
 }
 
+async function getExistingApplication(internshipId: string, userId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('applications')
+    .select('id, applied_externally')
+    .eq('internship_id', internshipId)
+    .eq('student_id', userId)
+    .maybeSingle();
+  return data ?? null;
+}
+
 export default async function InternshipDetailPage({ params }: PageProps) {
   const { id } = await params;
   const [internship, user] = await Promise.all([fetchInternship(id), getAuthUser()]);
+
+  if (!user) {
+    redirect(`/login?redirect=/internships/${id}`);
+  }
+
+  const existingApplication =
+    user && internship
+      ? await getExistingApplication(id, user.id)
+      : null;
 
   if (!internship) {
     notFound();
@@ -163,9 +184,10 @@ export default async function InternshipDetailPage({ params }: PageProps) {
               {/* Description card */}
               <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-7">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">About this role</h2>
-                <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed whitespace-pre-line">
-                  {internship.description}
-                </div>
+                <div
+                  className="prose prose-sm max-w-none text-gray-600 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: internship.description.replace(/<\/(b|strong)>([^\s<])/g, '</$1> $2') }}
+                />
               </div>
 
               {/* External listing embed */}
@@ -240,6 +262,23 @@ export default async function InternshipDetailPage({ params }: PageProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </a>
+
+                    {user ? (
+                      <ExternalApplyToggle
+                        internshipId={internship.id}
+                        userId={user.id}
+                        initialApplied={!!existingApplication}
+                        applicationId={existingApplication?.id}
+                      />
+                    ) : (
+                      <Link
+                        href={`/login?redirect=/internships/${internship.id}`}
+                        className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-semibold rounded-xl bg-gray-100 text-gray-600 border-2 border-gray-200 hover:bg-gray-200 transition-colors"
+                      >
+                        Login to track application
+                      </Link>
+                    )}
+
                     <p className="text-xs text-gray-400 text-center">
                       This listing is hosted on {sourceLabel}. You will be redirected to apply.
                     </p>

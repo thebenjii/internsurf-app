@@ -74,41 +74,41 @@ export default function RealtimeApplications({ initialApplications, userId }: Pr
   return (
     <div className="space-y-4">
       {applications.map((app) => {
-        const internshipUrl =
-          app.internship?.source !== 'internal' && app.internship?.external_url
-            ? app.internship.external_url
-            : `/internships/${app.internship_id}`;
-
-        return (
+          return (
           <div
             key={app.id}
             className="bg-white border border-gray-200 rounded-xl p-5 hover:border-blue-200 hover:shadow-sm transition-all"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <a
-                  href={internshipUrl}
-                  target={app.internship?.source !== 'internal' ? '_blank' : undefined}
-                  rel={app.internship?.source !== 'internal' ? 'noopener noreferrer' : undefined}
+                <Link
+                  href={`/internships/${app.internship_id}`}
                   className="text-base font-semibold text-gray-900 hover:text-blue-600 transition-colors truncate block"
                 >
                   {app.internship?.title ?? 'Internship'}
-                </a>
+                </Link>
                 <p className="text-sm text-gray-500 mt-0.5">
                   {getCompanyName(app)}
                   {app.internship?.location && ` · ${app.internship.location}`}
                   {app.internship?.is_remote && ' · Remote'}
                 </p>
-                {app.internship?.category && (
-                  <span className="mt-1.5 inline-block text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
-                    {app.internship.category}
-                  </span>
-                )}
+                <div className="mt-1.5 flex flex-wrap gap-1.5">
+                  {app.internship?.category && (
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded">
+                      {app.internship.category}
+                    </span>
+                  )}
+                  {app.applied_externally && (
+                    <span className="text-xs text-teal-700 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded font-medium">
+                      Applied Externally
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="flex flex-col items-end gap-2 shrink-0">
                 <StatusBadge status={app.status as ApplicationStatus} />
                 <p className="text-xs text-gray-400">
-                  Applied{' '}
+                  {app.applied_externally ? 'Marked' : 'Applied'}{' '}
                   {new Date(app.created_at).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -118,10 +118,11 @@ export default function RealtimeApplications({ initialApplications, userId }: Pr
               </div>
             </div>
 
-            {app.status !== app.status && null /* placeholder for cover letter preview */}
-            <div className="mt-3 pt-3 border-t border-gray-100">
-              <p className="text-xs text-gray-400 line-clamp-2">{app.cover_letter}</p>
-            </div>
+            {!app.applied_externally && app.cover_letter && (
+              <div className="mt-3 pt-3 border-t border-gray-100">
+                <p className="text-xs text-gray-400 line-clamp-2">{app.cover_letter}</p>
+              </div>
+            )}
           </div>
         );
       })}

@@ -85,7 +85,7 @@ export default function LandingPage() {
                 Browse Internships
               </Link>
               <Link
-                href="/signup"
+                href="/signup?role=organization"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl border-2 border-white/60 text-white font-semibold text-base hover:bg-white/10 transition-colors"
               >
                 Post an Internship
@@ -221,7 +221,7 @@ export default function LandingPage() {
                 </div>
 
                 <Link
-                  href="/signup"
+                  href="/signup?role=organization"
                   className="inline-flex items-center gap-2 mt-2 text-sm font-medium text-blue-600 hover:text-blue-700"
                 >
                   Register your organization

@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
 
         const { error, data: upserted } = await supabase
           .from('internships')
-          .upsert(record, { onConflict: 'external_id', ignoreDuplicates: false })
+          .upsert(record, { onConflict: 'source,external_id', ignoreDuplicates: false })
           .select('id');
 
         if (error) {
@@ -182,7 +182,7 @@ export async function GET(request: NextRequest) {
 
         const { error } = await supabase
           .from('internships')
-          .upsert(record, { onConflict: 'external_id', ignoreDuplicates: false })
+          .upsert(record, { onConflict: 'source,external_id', ignoreDuplicates: false })
           .select('id');
 
         if (error) {

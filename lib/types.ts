@@ -2,6 +2,13 @@ export type Profile = {
   id: string;
   role: 'student' | 'organization';
   full_name: string | null;
+  school: string | null;
+  major: string | null;
+  graduation_year: number | null;
+  gpa: number | null;
+  bio: string | null;
+  linkedin_url: string | null;
+  phone: string | null;
   created_at: string;
 };
 
@@ -56,6 +63,7 @@ export type Application = {
   cover_letter: string;
   resume_url: string | null;
   status: ApplicationStatus;
+  applied_externally: boolean;
   org_notes: string | null;
   created_at: string;
   updated_at: string;
